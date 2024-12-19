@@ -1,42 +1,61 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { successResponse, errorResponse } from "../../utils/responses";
-import { getAllProducts, addProduct } from "../../database/models/product";
+import { getProducts, addProduct } from "../../database/models/product";
+import { getSellerById } from "../../database/models/seller";
 
-// Handle GET and POST requests for products
 const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
-    try {
-      // Fetch all products
-      const products = await getAllProducts();
+  try {
+    if (req.method === "GET") {
+      const { id } = req.query;
+
+      // Fetch all products or a single product based on the query parameter
+      const products = await getProducts(id ? Number(id) : undefined);
+
+      if (id && !products.length) {
+        return errorResponse(res, "Product not found", 404);
+      }
+
       return successResponse(res, products, 200);
-    } catch (error) {
-      return errorResponse(res, "Failed to fetch products", 500);
-    }
-  }
-
-  if (req.method === "POST") {
-    const { name, description, status, sellerId } = req.body;
-
-    if (!name || !description || !status || !sellerId) {
-      return errorResponse(res, "All fields are required", 400);
     }
 
-    try {
-      // Create a new product
+    if (req.method === "POST") {
+      const { name, description, status, sellerId } = req.body;
+
+      if (!name || !description || !status || !sellerId) {
+        return errorResponse(res, "All fields are required", 400);
+      }
+
+      // Check if the seller exists
+      let seller;
+      try {
+        seller = await getSellerById(sellerId);
+      } catch (err) {
+        return errorResponse(
+          res,
+          "Failed to check seller existence. Please try again.",
+          500
+        );
+      }
+
+      if (!seller) {
+        return errorResponse(res, "Seller not found. Cannot add product.", 404);
+      }
+
       const newProduct = await addProduct({
         name,
         description,
         status,
         sellerId,
       });
-      return successResponse(res, newProduct, 201);
-    } catch (error) {
-      return errorResponse(res, "Failed to create product", 500);
-    }
-  }
 
-  // Method not allowed
-  return errorResponse(res, "Method not allowed", 405);
+      return successResponse(res, newProduct, 201);
+    }
+
+    return errorResponse(res, "Method not allowed", 405);
+  } catch (error) {
+    console.error("Error in productsHandler:", error);
+    return errorResponse(res, "Internal server error", 500);
+  }
 };
 
 export default productsHandler;

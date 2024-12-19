@@ -8,58 +8,66 @@ export interface Product {
   sellerId: number;
 }
 
-// Get all products
-export const getAllProducts = (): Promise<Product[]> => {
+// Fetch products (all or a specific one by ID)
+export const getProducts = (id?: number): Promise<Product[]> => {
   return new Promise((resolve, reject) => {
-    DB.all("SELECT * FROM products", (err, rows: any) => {
-      if (err) reject(err);
-      else {
-        console.log("rp", rows);
+    const query = id
+      ? "SELECT * FROM products WHERE id = ?"
+      : "SELECT * FROM products";
+    const params = id ? [id] : [];
+
+    DB.all(query, params, (err, rows: Product[]) => {
+      if (err) {
+        reject(new Error(`Error fetching products: ${err.message}`));
+      } else {
         resolve(rows);
       }
     });
   });
 };
 
-// Get a product by ID
-export const getProductById = (id: number): Promise<Product | undefined> => {
-  return new Promise((resolve, reject) => {
-    DB.get("SELECT * FROM products WHERE id = ?", [id], (err, row: any) => {
-      if (err) reject(err);
-      resolve(row);
-    });
-  });
-};
-
-// Function to add a product to the database
-export const addProduct = (product: Product): Promise<void> => {
+// Add a new product
+export const addProduct = (product: Product): Promise<Product> => {
   return new Promise((resolve, reject) => {
     const { name, description, status, sellerId } = product;
     const query =
       "INSERT INTO products (name, description, status, sellerId) VALUES (?, ?, ?, ?)";
+
     DB.run(query, [name, description, status, sellerId], function (err) {
       if (err) {
         reject(new Error(`Error inserting product: ${err.message}`));
       } else {
-        resolve();
+        resolve({ id: this.lastID, ...product });
       }
     });
   });
 };
 
-// Update product status
-export const updateProductStatus = (
-  id: number,
-  status: string
-): Promise<void> => {
+// New helper type for partial updates
+export type PartialProduct = Partial<Product> & { id: number };
+
+// Function for partial updates
+export const updateProduct = (
+  product: PartialProduct
+): Promise<Product | null> => {
   return new Promise((resolve, reject) => {
-    DB.run(
-      "UPDATE products SET status = ? WHERE id = ?",
-      [status, id],
-      function (err) {
-        if (err) reject(err);
-        resolve();
+    const { id, ...fieldsToUpdate } = product;
+
+    const setFields = Object.keys(fieldsToUpdate)
+      .map((key) => `${key} = ?`)
+      .join(", ");
+    const values = Object.values(fieldsToUpdate);
+
+    if (!setFields) {
+      return reject(new Error("No fields to update."));
+    }
+
+    const query = `UPDATE products SET ${setFields} WHERE id = ?`;
+    DB.run(query, [...values, id], function (err) {
+      if (err) {
+        return reject(new Error(`Error updating product: ${err.message}`));
       }
-    );
+      resolve(fieldsToUpdate as Product);
+    });
   });
 };
