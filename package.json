@@ -1,0 +1,33 @@
+{
+  "name": "b2b-marketplace-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "ts-node pages/database/sample-data.ts"
+  },
+  "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "next": "^15.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
