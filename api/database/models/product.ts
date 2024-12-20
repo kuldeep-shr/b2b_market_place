@@ -11,11 +11,16 @@ export interface Product {
 }
 
 // Fetch products (all or a specific one by ID)
-export const getProducts = (id?: number): Promise<Product[]> => {
+export const getProducts = (
+  id?: number,
+  limit?: number
+): Promise<Product[]> => {
   return new Promise((resolve, reject) => {
     const query = id
-      ? "SELECT p.id, p.name,p.description,p.status,p.image,p.sellerId,s.name AS seller FROM products AS p LEFT JOIN sellers AS s ON p.sellerId=s.id WHERE p.id = ?"
-      : "SELECT p.id, p.name,p.description,p.status,p.image,p.sellerId,s.name AS seller FROM products AS p LEFT JOIN sellers AS s ON p.sellerId=s.id";
+      ? "SELECT p.id, p.name,p.description,p.status,p.image,p.sellerId,s.name AS seller FROM products AS p LEFT JOIN sellers AS s ON p.sellerId=s.id WHERE p.id = ? LIMIT " +
+        limit
+      : "SELECT p.id, p.name,p.description,p.status,p.image,p.sellerId,s.name AS seller FROM products AS p LEFT JOIN sellers AS s ON p.sellerId=s.id LIMIT " +
+        limit;
     const params = id ? [id] : [];
 
     DB.all(query, params, (err, rows: Product[]) => {

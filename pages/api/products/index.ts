@@ -14,7 +14,7 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     const sellerObj = (req as any).user;
 
     if (req.method === "GET") {
-      const { id, seller } = req.query;
+      const { id, seller, limit = 5 } = req.query;
 
       // If `seller` query is provided, fetch products for the seller
       if (seller) {
@@ -29,8 +29,12 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         // });
       }
 
+      const limitData: any = limit;
       // Fetch all products or a single product based on the query parameter
-      const products = await getProducts(id ? Number(id) : undefined);
+      const products = await getProducts(
+        id ? Number(id) : undefined,
+        limitData
+      );
 
       if (id && !products.length) {
         return errorResponse(res, "Product not found", 404);
@@ -44,7 +48,6 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return getUserFromSession(req, res, async () => {
         try {
           const sellerId = (req as any).user.id;
-          console.log("sellerId???????????????/", sellerId);
           const { name, description, status, image } = req.body;
 
           if (!name || !description || !status) {

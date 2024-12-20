@@ -29,15 +29,15 @@ const updateSeller = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
       // Ensure the ID is a valid number
-      const sellerId = Number(id); // Convert the query param id to a number
+      const sellerId = Number(id);
       if (isNaN(sellerId)) {
-        return errorResponse(res, "Invalid seller ID", 400); // If ID is not a valid number
+        return errorResponse(res, "Invalid seller ID", 400);
       }
 
       // Check if the seller exists
       const seller = await getSellerById(sellerId);
       if (!seller) {
-        return errorResponse(res, "Seller not found", 404); // Error if seller not found
+        return errorResponse(res, "Seller not found", 404);
       }
 
       // Prepare the fields to be updated
@@ -55,7 +55,7 @@ const updateSeller = async (req: NextApiRequest, res: NextApiResponse) => {
       return successResponse(res, [updatedSeller], 200);
     } catch (error) {
       console.error("Error during seller update:", error);
-      return errorResponse(res, "Internal server error", 500); // Internal server error
+      return errorResponse(res, "Internal server error", 500);
     }
   });
 };
