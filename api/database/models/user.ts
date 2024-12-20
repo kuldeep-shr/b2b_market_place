@@ -42,7 +42,7 @@ export const createUser = async (user: User): Promise<User | null> => {
 
         // Retrieve the inserted user details from the database
         DB.get(
-          "SELECT id, name, email FROM sellers WHERE id = ?",
+          "SELECT id, name, email,image FROM sellers WHERE id = ?",
           [result.lastID],
           (selectErr, row) => {
             if (selectErr) {
@@ -51,11 +51,6 @@ export const createUser = async (user: User): Promise<User | null> => {
                 new Error("Failed to fetch inserted seller details")
               );
             }
-
-            // Log the retrieved user details
-            console.log("Inserted sellers details:", row);
-
-            // Resolve with the inserted user details (exclude password)
             const { password: _, ...userData }: any = row;
             resolve(userData);
           }

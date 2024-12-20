@@ -78,7 +78,7 @@ export const updateProduct = (
 export const getProductsBySellerId = (sellerId: number): Promise<Product[]> => {
   return new Promise((resolve, reject) => {
     const query =
-      "SELECT p.id, p.name,p.description,p.status,p.image,p.sellerId,s.name AS seller FROM products AS p LEFT JOIN sellers AS s ON p.sellerId=s.id WHERE sellerId = ?";
+      "SELECT p.id, p.name,p.description,p.status,p.image,p.sellerId,s.name AS seller FROM products AS p LEFT JOIN sellers AS s ON p.sellerId=s.id WHERE p.sellerId = ?";
     DB.all(query, [sellerId], (err, rows: any) => {
       if (err) {
         reject(new Error(`Error fetching products: ${err.message}`));

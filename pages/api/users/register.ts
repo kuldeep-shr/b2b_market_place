@@ -53,7 +53,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const jwtToken = generateToken(newUser.id);
     if (!newUser) {
-      return errorResponse(res, "Failed to create seller", 500); // Error if user is not created
+      return errorResponse(res, "Failed to create seller", 500);
     }
     // Omit password from the response using Omit utility type
     const userData = omitPassword(newUser);
