@@ -41,17 +41,19 @@ Before you begin, ensure you have the following installed:
       npm install
 ```
 
-3. Before you proceed further, you have to run seed command for creating the database(please go .env file for name) with sample data
+3. Before you proceed further, you have to run seed command for creating the database, hit the URL
 
 ```bash
-      npm run seed
+      {BASE_URL}/api/users/seed
 ```
 
 4. Set up your .env file with required environment variables (example)
 
 ```
       JWT_SECRET: <your-jwt-secret-key>
-      DB: <your preferred name for the database>
+      DATABASE_URL: <your preferred name for the database>
+      DATABASE_URL: <your preferred name for the database>
+      env: <production> or <local>
 ```
 
 5. Run the dev mode:
@@ -89,6 +91,7 @@ Before you begin, ensure you have the following installed:
 ### Product Endpoints:
 
 - Get Product by ID: /api/products/[id] - Retrieve details of a single product by ID.
+- Get Product by Sellers ID: /api/products?sellerId=[id] - Retrieve details of all products by seller.
 - Create Product: /api/products - Add a new product.
 - Update Product: /api/products/[id] - Update product details.
 - Delete Product: /api/products/[id] - Delete a product.

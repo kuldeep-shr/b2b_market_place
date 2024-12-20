@@ -1,5 +1,6 @@
 import { createUser } from "./models/user";
 import { addProduct } from "./models/product";
+import { NextApiRequest, NextApiResponse } from "next";
 import DB from "./index";
 
 // Define Seller type
@@ -105,7 +106,7 @@ const products: Omit<Product, "sellerId">[] = [
 ];
 
 // Function to check if the database exists
-const checkAndCreateDatabase = async (): Promise<void> => {
+export const checkAndCreateDatabase = async (): Promise<void> => {
   try {
     const result = await DB.query(
       `SELECT 1 FROM pg_database WHERE datname = 'your_database_name'`
@@ -124,7 +125,7 @@ const checkAndCreateDatabase = async (): Promise<void> => {
 };
 
 // Function to seed the database
-const seedDatabase = async (): Promise<void> => {
+export const seedDatabase = async (): Promise<void> => {
   try {
     console.log("Starting database seeding...");
 
@@ -150,18 +151,3 @@ const seedDatabase = async (): Promise<void> => {
     console.error("Error seeding database:", err);
   }
 };
-
-// Main Function
-const main = async (): Promise<void> => {
-  if (process.env.NODE_ENV !== "production") {
-    await checkAndCreateDatabase();
-    await seedDatabase();
-  } else {
-    console.warn("Seeding is disabled in the production environment.");
-  }
-};
-
-// Run the main function
-main().catch((err) => {
-  console.error("Unexpected error:", err);
-});
