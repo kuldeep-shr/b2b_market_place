@@ -24,6 +24,7 @@ export const getProducts = (
     const params = id ? [id] : [];
 
     DB.all(query, params, (err, rows: Product[]) => {
+      console.log(query);
       if (err) {
         reject(new Error(`Error fetching products: ${err.message}`));
       } else {
