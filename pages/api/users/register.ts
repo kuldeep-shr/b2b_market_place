@@ -60,7 +60,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     userData["token"] = jwtToken;
     userData["token_validity"] = "1h";
     // Return success response with user data (excluding password)
-    return successResponse(res, [userData], 201);
+    return successResponse(res, userData, 201);
   } catch (error) {
     console.error("Error during seller registration:", error);
     return errorResponse(res, "Internal server error", 500);

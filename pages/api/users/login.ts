@@ -37,7 +37,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
     // Return success response with user data (excluding password)
     const { password: _, ...userData } = user;
     (userData["token"] = jwtToken), (userData["token_validity"] = "1h");
-    return successResponse(res, [userData], 200);
+    return successResponse(res, userData, 200);
   } catch (error) {
     return errorResponse(res, "Internal server error", 500);
   }
