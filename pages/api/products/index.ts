@@ -9,18 +9,15 @@ import { getSellerById } from "../../../api/database/models/seller";
 import { getUserFromSession } from "../../api/auth/index";
 
 const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // getUserFromSession(req, res, async () => {
   try {
-    const sellerObj = (req as any).user;
-
     if (req.method === "GET") {
-      const { id, seller, limit = 5 } = req.query;
+      const { id, sellerId, limit = 5 }: any = req.query;
 
       // If `seller` query is provided, fetch products for the seller
-      if (seller) {
+      if (sellerId) {
         // return getUserFromSession(req, res, async () => {
         try {
-          const products = await getProductsBySellerId(sellerObj.id);
+          const products = await getProductsBySellerId(sellerId);
           return successResponse(res, products, 200);
         } catch (error) {
           console.error("Error fetching products for seller:", error);
@@ -88,7 +85,6 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.error("Error in productsHandler:", error);
     return errorResponse(res, "Internal server error", 500);
   }
-  // });
 };
 
 export default productsHandler;
