@@ -14,7 +14,7 @@ const Product = (props: Props) => {
 
   const router = useRouter();
 
-  const BASE_URL = "http://localhost:8000/api";
+  const BASE_URL = "https://b2b-market-place-iota.vercel.app/api";
 
   useEffect(() => {
     const userFromStorage = window.localStorage.getItem("user");

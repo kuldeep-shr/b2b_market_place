@@ -12,7 +12,7 @@ import { User as UserType } from "components/user/types";
 const Sellers = () => {
   const [users, setUsers] = useState<Array<UserType>>();
 
-  const BASE_URL = "http://localhost:8000/api";
+  const BASE_URL = "https://b2b-market-place-iota.vercel.app/api";
 
   const fetchSellers = () => {
     axios.get(`${BASE_URL}/sellers`).then((res) => {

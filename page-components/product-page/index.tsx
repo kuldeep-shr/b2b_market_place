@@ -16,7 +16,7 @@ const ProductPage = () => {
 
   const id = router.query.id;
 
-  const BASE_URL = "http://localhost:8000/api";
+  const BASE_URL = "https://b2b-market-place-iota.vercel.app/api";
 
   const fetchProduct = () => {
     axios.get(`${BASE_URL}/products?id=${id}`).then((res) => {
