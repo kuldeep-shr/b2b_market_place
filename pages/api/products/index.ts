@@ -52,7 +52,7 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
 
           // Check if the seller exists
-          const seller = await getSellerById(1111);
+          const seller = await getSellerById(sellerId);
           if (!seller) {
             return errorResponse(
               res,

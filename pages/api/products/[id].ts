@@ -5,6 +5,7 @@ import {
   productMapBySeller,
 } from "../../../api/database/models/product";
 import { getUserFromSession } from "../../api/auth/index";
+import { broadcastProductUpdate } from "../../../api/utils/websocket";
 
 const productUpdateHandler = async (
   req: NextApiRequest,
@@ -50,6 +51,11 @@ const productUpdateHandler = async (
         ...(sellerId && { sellerId }),
       });
 
+      if (status) {
+        console.log("in broadcast.....");
+        // Broadcast update to WebSocket clients
+        broadcastProductUpdate({ id, status });
+      }
       return successResponse(res, updatedProduct, 200);
     } catch (error) {
       console.error("Error updating product:", error);
