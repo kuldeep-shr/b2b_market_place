@@ -50,7 +50,7 @@ const productUpdateHandler = async (
         ...(sellerId && { sellerId }),
       });
 
-      return successResponse(res, [updatedProduct], 200);
+      return successResponse(res, updatedProduct, 200);
     } catch (error) {
       console.error("Error updating product:", error);
       return errorResponse(res, "Failed to update product", 500);

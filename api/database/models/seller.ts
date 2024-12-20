@@ -29,7 +29,7 @@ const getSellerById = async (id: number): Promise<Seller | null> => {
         });
       }
       if (!rows) {
-        return reject({ message: `Seller with ID ${id} not found` });
+        return reject(`Seller with ID ${id} not found`);
       }
       resolve(rows);
     });
