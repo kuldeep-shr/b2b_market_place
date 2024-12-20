@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -p 8000",
     "lint": "next lint",
-    "seed": "ts-node pages/database/sample-data.ts"
+    "seed": "ts-node api/database/sample-data.ts"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",

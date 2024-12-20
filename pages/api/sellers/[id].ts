@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { successResponse, errorResponse } from "../../utils/responses";
-import { getSellerById, updateSellerById } from "../../database/models/seller";
+import { successResponse, errorResponse } from "../../../api/utils/responses";
+import {
+  getSellerById,
+  updateSellerById,
+} from "../../../api/database/models/seller";
 import { getUserFromSession } from "../auth/index";
 
 // Handler for updating a seller's details

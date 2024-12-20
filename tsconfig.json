@@ -18,6 +18,6 @@
       "~/*": ["src/*"] // Allow importing from src as `~/...`
     }
   },
-  "include": ["src/**/*", "pages/**/*"], // Include both `src` and `pages` for Next.js
+  "include": ["src/**/*", "pages/**/*", "api/database", "api/utils"], // Include both `src` and `pages` for Next.js
   "exclude": ["node_modules"] // Exclude `node_modules`
 }

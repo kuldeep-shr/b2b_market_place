@@ -23,6 +23,7 @@ const createTables = () => {
         description TEXT,
         status TEXT NOT NULL,
         sellerId INTEGER,
+        image TEXT,
         FOREIGN KEY (sellerId) REFERENCES sellers(id)
       )
     `);
@@ -32,18 +33,10 @@ const createTables = () => {
       CREATE TABLE IF NOT EXISTS sellers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        password TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
+        image TEXT,
         contact TEXT
-      )
-    `);
-
-    // Create users table
-    DB.run(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
       )
     `);
   });

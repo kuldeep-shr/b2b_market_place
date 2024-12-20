@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { successResponse, errorResponse } from "../../utils/responses";
-import { getUserByEmail } from "../../database/models/user";
+import { successResponse, errorResponse } from "../../../api/utils/responses";
+import { getUserByEmail } from "../../../api/database/models/user";
 import { comparePassword } from "../auth/index";
-import { generateToken } from "../../utils/jwt";
+import { generateToken } from "../../../api/utils/jwt";
 
 // Handler for user login
 const login = async (req: NextApiRequest, res: NextApiResponse) => {

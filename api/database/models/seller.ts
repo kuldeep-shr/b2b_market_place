@@ -1,7 +1,6 @@
 // src/database/models/seller.ts
-import DB from "../../database/index";
-import { Seller } from "../../api/sellers/seller";
-import sqlite3 from "sqlite3";
+import DB from "../index";
+import { Seller } from "../../../pages/api/sellers/seller";
 
 const sellerExists = async (email: string): Promise<boolean> => {
   return new Promise((resolve, reject) => {
@@ -54,28 +53,28 @@ const getAllSellers = async (): Promise<Seller[]> => {
 };
 
 // Function to create a new seller
-const createSeller = async (seller: Seller): Promise<Seller> => {
-  return new Promise((resolve, reject) => {
-    const { name, email, contact } = seller;
+// const createSeller = async (seller: Seller): Promise<Seller> => {
+//   return new Promise((resolve, reject) => {
+//     const { name, email, contact, password } = seller;
 
-    DB.run(
-      "INSERT INTO sellers (name, email, contact) VALUES (?, ?, ?)",
-      [name, email, contact],
-      function (err: Error) {
-        if (err) {
-          console.error("Error inserting seller:", err.message);
-          return reject({
-            message: "Database error while inserting seller",
-            error: err,
-          });
-        }
-        const result = this as sqlite3.RunResult;
-        const newSeller: Seller = { id: result.lastID, name, email, contact };
-        resolve(newSeller);
-      }
-    );
-  });
-};
+//     DB.run(
+//       "INSERT INTO sellers (name, email, contact,password) VALUES (?, ?, ?,?)",
+//       [name, email, contact, password],
+//       function (err: Error) {
+//         if (err) {
+//           console.error("Error inserting seller:", err.message);
+//           return reject({
+//             message: "Database error while inserting seller",
+//             error: err,
+//           });
+//         }
+//         const result = this as sqlite3.RunResult;
+//         const newSeller: Seller = { id: result.lastID, name, email, contact };
+//         resolve(newSeller);
+//       }
+//     );
+//   });
+// };
 
 // Function to handle single or multiple seller retrieval
 const getSellers = async (ids?: any): Promise<Seller[]> => {
@@ -146,7 +145,7 @@ const updateSellerById = (
 export {
   getSellerById,
   getAllSellers,
-  createSeller,
+  // createSeller,
   updateSellerById,
   getSellers,
   sellerExists,

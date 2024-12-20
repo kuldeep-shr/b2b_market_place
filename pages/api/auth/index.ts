@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import { getUserById } from "../../database/models/user";
+import { getUserById } from "../../../api/database/models/user";
 
 const SECRET_KEY = String(process.env.JWT_SECRET);
 
@@ -21,35 +21,41 @@ export const comparePassword = async (
   return isMatch;
 };
 
-// Function to extract user from session or token (if using JWT)
+// Extend NextApiRequest type to include the `user` property
+interface CustomNextApiRequest extends NextApiRequest {
+  user?: any;
+}
+
 export const getUserFromSession = async (
-  req: NextApiRequest,
+  req: CustomNextApiRequest,
   res: NextApiResponse,
   next: Function
 ) => {
   // Try to extract token from cookies or headers
-  const token = req.cookies.token || req.headers.authorization?.split(" ")[1]; // Token from cookies or Authorization header
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({ message: "Authentication token missing" });
   }
 
   try {
-    console.log("JWT____", SECRET_KEY);
-
     // Verify the JWT token and extract user data
     const decoded: any = jwt.verify(token, SECRET_KEY); // Decode JWT
     const userId: number = decoded.userId;
 
-    console.log("user", decoded);
     // Fetch the user from the database using the userId
     const user = await getUserById(userId);
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
+
+    // Attach the user to the request object
+    req.user = user;
+
+    // Proceed to the next middleware or route handler
     next();
   } catch (error) {
-    console.log("auth", error);
+    console.error("Authentication error:", error);
     return res.status(500).json({ message: "Authentication failed" });
   }
 };

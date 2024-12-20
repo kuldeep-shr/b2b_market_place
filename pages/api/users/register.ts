@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { successResponse, errorResponse } from "../../utils/responses";
-import { generateToken } from "../../utils/jwt";
-import { createUser, getUserByEmail } from "../../database/models/user";
+import { successResponse, errorResponse } from "../../../api/utils/responses";
+import { generateToken } from "../../../api/utils/jwt";
+import { createUser, getUserByEmail } from "../../../api/database/models/user";
 import { hashPassword } from "../auth";
 
 // Define the User type
@@ -42,7 +42,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const jwtToken = generateToken(newUser.id);
     if (!newUser) {
-      return errorResponse(res, "Failed to create user", 500); // Error if user is not created
+      return errorResponse(res, "Failed to create seller", 500); // Error if user is not created
     }
     // Omit password from the response using Omit utility type
     const userData = omitPassword(newUser);
@@ -51,7 +51,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     // Return success response with user data (excluding password)
     return successResponse(res, [userData], 201);
   } catch (error) {
-    console.error("Error during user registration:", error);
+    console.error("Error during seller registration:", error);
     return errorResponse(res, "Internal server error", 500);
   }
 };

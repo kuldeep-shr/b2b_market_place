@@ -78,16 +78,12 @@ Before you begin, ensure you have the following installed:
 
 ## 📚 API Endpoints
 
-### User Endpoints:
-
-- Login: /api/users/login - Login to get a JWT token.
-- Register: /api/users/register - Register a new user.
-
 ### Seller Endpoints:
 
+- Login: /api/users/login - Login to get a JWT token.
+- Register: /api/users/register - Register a new seller.
 - Get Seller by ID: /api/sellers/[id] - Get details of a single seller by ID.
 - Get All Sellers: /api/sellers - Retrieve a list of all sellers.
-- Create Seller: /api/sellers - Add a new seller.
 - Update Seller: /api/sellers/[id] - Update seller details (e.g., name, email).
 
 ### Product Endpoints:
