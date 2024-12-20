@@ -4,7 +4,7 @@
     "lib": ["dom", "dom.iterable", "esnext"], // Libraries to include in the compilation
     "allowJs": true, // Allow JavaScript files to be included
     "skipLibCheck": true, // Skip type checking of declaration files
-    "strict": true, // Enable strict mode for type checking
+    "strict": false, // Enable strict mode for type checking
     "noEmit": false, // Allow output of compiled files (important for Node.js scripts)
     "esModuleInterop": true, // Enables compatibility with CommonJS modules
     "module": "commonjs", // Module system for Node.js
@@ -16,8 +16,10 @@
     "baseUrl": ".", // Base directory for non-relative imports
     "paths": {
       "~/*": ["src/*"] // Allow importing from src as `~/...`
-    }
+    },
+    "jsxImportSource": "@emotion/react"
   },
-  "include": ["src/**/*", "pages/**/*", "api/database", "api/utils"], // Include both `src` and `pages` for Next.js
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  // "include": ["src/**/*", "pages/**/*"], // Include both `src` and `pages` for Next.js
   "exclude": ["node_modules"] // Exclude `node_modules`
 }

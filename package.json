@@ -11,9 +11,13 @@
     "seed": "ts-node api/database/sample-data.ts"
   },
   "dependencies": {
+    "@emotion/cache": "11.11.0",
+    "@emotion/react": "11.10.4",
+    "@emotion/styled": "11.10.4",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/ws": "^8.5.13",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",

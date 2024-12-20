@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  compiler: {
+    emotion: true,
+  },
 };
 
 export default nextConfig;
