@@ -45,7 +45,12 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return getUserFromSession(req, res, async () => {
         try {
           const sellerId = (req as any).user.id;
-          const { name, description, status, image } = req.body;
+          const {
+            name,
+            description,
+            status,
+            image = "https://picsum.photos/id/237/200/300",
+          } = req.body;
 
           if (!name || !description || !status) {
             return errorResponse(res, "All fields are required", 400);
