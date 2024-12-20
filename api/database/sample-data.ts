@@ -1,5 +1,6 @@
 import { createUser } from "./models/user";
 import { addProduct } from "./models/product";
+import DB from "./index";
 
 // Define Seller type
 interface Seller {
@@ -70,54 +71,77 @@ const sellers: Seller[] = [
 ];
 
 // Sample Product Data
-const products: Product[] = [
+const products: Omit<Product, "sellerId">[] = [
   {
     name: "Product 1",
     description: "Description for Product 1",
     image: "https://picsum.photos/id/1/200/300",
     status: "available",
-    sellerId: 1,
   },
   {
     name: "Product 2",
     description: "Description for Product 2",
     image: "https://picsum.photos/id/2/200/300",
     status: "sold",
-    sellerId: 1,
   },
   {
     name: "Product 3",
     description: "Description for Product 3",
     image: "https://picsum.photos/id/3/200/300",
     status: "available",
-    sellerId: 2,
   },
   {
     name: "Product 4",
     description: "Description for Product 4",
     image: "https://picsum.photos/id/4/200/300",
     status: "available",
-    sellerId: 3,
   },
   {
     name: "Product 5",
     description: "Description for Product 5",
     image: "https://picsum.photos/id/6/200/300",
     status: "sold",
-    sellerId: 4,
   },
 ];
 
-// Function to seed data
+// Function to check if the database exists
+const checkAndCreateDatabase = async (): Promise<void> => {
+  try {
+    const result = await DB.query(
+      `SELECT 1 FROM pg_database WHERE datname = 'your_database_name'`
+    );
+    if (result.rowCount === 0) {
+      console.log("Database does not exist. Creating database...");
+      await DB.query(`CREATE DATABASE your_database_name`);
+      console.log("Database created successfully.");
+    } else {
+      console.log("Database already exists.");
+    }
+  } catch (err) {
+    console.error("Error checking or creating the database:", err);
+    throw new Error("Failed to verify or create the database.");
+  }
+};
+
+// Function to seed the database
 const seedDatabase = async (): Promise<void> => {
   try {
+    console.log("Starting database seeding...");
+
+    const sellerIds: number[] = [];
+
     // Insert Sellers
     for (const seller of sellers) {
-      await createUser(seller);
+      const createdSeller: any = await createUser(seller);
+      sellerIds.push(createdSeller.id);
     }
 
     // Insert Products
-    for (const product of products) {
+    for (let i = 0; i < products.length; i++) {
+      const product = {
+        ...products[i],
+        sellerId: sellerIds[i % sellerIds.length],
+      };
       await addProduct(product);
     }
 
@@ -127,5 +151,17 @@ const seedDatabase = async (): Promise<void> => {
   }
 };
 
-// Run the seed function
-seedDatabase();
+// Main Function
+const main = async (): Promise<void> => {
+  if (process.env.NODE_ENV !== "production") {
+    await checkAndCreateDatabase();
+    await seedDatabase();
+  } else {
+    console.warn("Seeding is disabled in the production environment.");
+  }
+};
+
+// Run the main function
+main().catch((err) => {
+  console.error("Unexpected error:", err);
+});
