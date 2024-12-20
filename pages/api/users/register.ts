@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { successResponse, errorResponse } from "../../../api/utils/responses";
 import { generateToken } from "../../../api/utils/jwt";
-import { createUser, getUserByEmail } from "../../../api/database/models/user";
+import {
+  createUser,
+  checkUserExistence,
+} from "../../../api/database/models/user";
 import { hashPassword } from "../auth";
 
 // Define the User type
@@ -9,7 +12,9 @@ interface User {
   id: number;
   name: string;
   email: string;
-  password: string; // This will be excluded later
+  password: string;
+  contact: string;
+  image?: string;
 }
 
 // Handler for user registration
@@ -18,16 +23,20 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
     return errorResponse(res, "Method not allowed", 405); // Error if method is not POST
   }
 
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
+  const { name, email, password, image, contact } = req.body;
+  if (!name || !email || !password || !contact) {
     return errorResponse(res, "All fields are required", 400); // Error if any field is missing
   }
 
   try {
-    // Check if user already exists by email
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      return errorResponse(res, "Email already in use", 409); // Error if email is already taken
+    // Check if user already exists by email or phone
+    const user = await checkUserExistence(contact, email);
+    if (user) {
+      return errorResponse(
+        res,
+        "User exists, please check your email or phone",
+        409
+      );
     }
 
     // Hash the password
@@ -38,6 +47,8 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       name,
       email,
       password: hashedPassword,
+      contact,
+      image,
     });
 
     const jwtToken = generateToken(newUser.id);

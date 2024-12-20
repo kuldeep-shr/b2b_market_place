@@ -46,7 +46,7 @@ export const getUserFromSession = async (
     // Fetch the user from the database using the userId
     const user = await getUserById(userId);
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "seller not found" });
     }
 
     // Attach the user to the request object

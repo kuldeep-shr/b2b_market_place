@@ -36,7 +36,7 @@ const createTables = () => {
         password TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         image TEXT,
-        contact TEXT
+        contact TEXT NOT NULL UNIQUE
       )
     `);
   });

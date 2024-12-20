@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { successResponse, errorResponse } from "../../../api/utils/responses";
-import { getUserByEmail } from "../../../api/database/models/user";
+import { checkUserExistence } from "../../../api/database/models/user";
 import { comparePassword } from "../auth/index";
 import { generateToken } from "../../../api/utils/jwt";
 
@@ -17,11 +17,14 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    // Find user by email
-    const user: any = await getUserByEmail(email);
-
+    // Check if user already exists by email or phone
+    const user: any = await checkUserExistence("", email);
     if (!user) {
-      return errorResponse(res, "User not found", 404); // Error if user doesn't exist
+      return errorResponse(
+        res,
+        "User not exists, please check your email or phone",
+        409
+      );
     }
 
     // Compare the provided password with the stored password

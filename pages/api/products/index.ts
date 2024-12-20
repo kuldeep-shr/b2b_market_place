@@ -42,7 +42,7 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (req.method === "POST") {
-        const { name, description, status, sellerId } = req.body;
+        const { name, description, status, sellerId, image } = req.body;
 
         if (!name || !description || !status || !sellerId) {
           return errorResponse(res, "All fields are required", 400);
@@ -63,6 +63,7 @@ const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           description,
           status,
           sellerId,
+          image,
         });
 
         return successResponse(res, newProduct, 201);

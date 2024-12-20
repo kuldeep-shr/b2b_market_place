@@ -31,7 +31,7 @@ export const getProducts = (id?: number): Promise<Product[]> => {
 // Add a new product
 export const addProduct = (product: Product): Promise<Product> => {
   return new Promise((resolve, reject) => {
-    const { name, description, status, sellerId, image = "" } = product;
+    const { name, description, status, sellerId, image } = product;
     const query =
       "INSERT INTO products (name, description, status, sellerId,image) VALUES (?, ?, ?, ?,?)";
 

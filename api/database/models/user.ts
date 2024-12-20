@@ -7,19 +7,26 @@ export interface User {
   name?: string;
   email: string;
   password: string; // Hashed password,
-  contact?: string;
+  contact: string;
   sample_data?: boolean;
+  image: string;
 }
 
 // Register a new user
 export const createUser = async (user: User): Promise<User | null> => {
   return new Promise(async (resolve, reject) => {
-    const { name, email, password, contact } = user;
+    const { name, email, password, contact, image } = user;
     const hashedPassword = await hashPassword(password);
     // Use parameterized query to prevent SQL injection
     DB.run(
-      "INSERT INTO sellers (name, email, password,contact) VALUES (?, ?, ?,?)",
-      [name, email, user.sample_data ? hashedPassword : password, contact],
+      "INSERT INTO sellers (name, email, password,contact,image) VALUES (?, ?, ?,?,?)",
+      [
+        name,
+        email,
+        user.sample_data ? hashedPassword : password,
+        contact,
+        image ? image : null,
+      ],
       function (err: Error) {
         if (err) {
           // Log the error to console for debugging
@@ -58,17 +65,47 @@ export const createUser = async (user: User): Promise<User | null> => {
   });
 };
 
-// Get a user by email
-export const getUserByEmail = (email: string): Promise<User | undefined> => {
+// get user information by contact or phone
+export const checkUserExistence = (
+  contact?: string,
+  email?: string
+): Promise<User | undefined> => {
   return new Promise((resolve, reject) => {
-    DB.get(
-      "SELECT * FROM sellers WHERE email = ?",
-      [email],
-      (err, row: any) => {
-        if (err) reject(err);
+    console.log("contact", contact);
+    console.log("email", email);
+    let query = `
+      SELECT 
+        *
+      FROM 
+        sellers 
+      WHERE 
+    `;
+    const params: (string | undefined)[] = [];
+
+    // Dynamically build query based on provided inputs
+    if (contact && email) {
+      query += `contact = ? OR email = ?`;
+      params.push(contact, email);
+    } else if (contact) {
+      query += `contact = ?`;
+      params.push(contact);
+    } else if (email) {
+      query += `email = ?`;
+      params.push(email);
+    } else {
+      reject(`At least one of 'contact' or 'email' must be provided.`);
+      return;
+    }
+
+    // Execute the query with dynamically built parameters
+    DB.get(query, params, (err, row: any) => {
+      console.log("sql", query);
+      if (err) {
+        reject(new Error(`Error checking user existence: ${err.message}`));
+      } else {
         resolve(row);
       }
-    );
+    });
   });
 };
 
