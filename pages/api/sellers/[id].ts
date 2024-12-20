@@ -9,15 +9,13 @@ import { getUserFromSession } from "../auth/index";
 // Handler for updating a seller's details
 const updateSeller = async (req: NextApiRequest, res: NextApiResponse) => {
   getUserFromSession(req, res, async () => {
-    const { id } = req.query; // Extract seller ID from the URL (query parameter)
+    const { id } = req.query;
     const { name, email, contact } = req.body;
 
-    // Ensure the request method is PATCH (for updates)
     if (req.method !== "PATCH") {
-      return errorResponse(res, "Method not allowed", 405); // Only PATCH is allowed
+      return errorResponse(res, "Method not allowed", 405);
     }
 
-    // Validate input fields (make sure at least one field is provided)
     if (!name && !email && !contact) {
       return errorResponse(
         res,
