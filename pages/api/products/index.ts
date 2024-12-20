@@ -11,7 +11,7 @@ import { getUserFromSession } from "../../api/auth/index";
 const productsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === "GET") {
-      const { id, sellerId, limit = 5 }: any = req.query;
+      const { id, sellerId, limit }: any = req.query;
 
       // If `seller` query is provided, fetch products for the seller
       if (sellerId) {
